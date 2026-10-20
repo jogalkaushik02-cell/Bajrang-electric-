@@ -24,13 +24,19 @@ jobs:
       - name: Create Flutter project structure
         run: |
           rm -rf android ios web linux macos windows test
-          flutter create . --org com.bajrangelectric --project-name nutrition_tracker --platforms android --project-name nutrition_tracker
+          flutter create . --org com.bajrangelectric --project-name nutrition_tracker --platforms android
+
+      - name: Copy app files
+        run: |
+          cp -f pubspec.yaml /tmp/pubspec.yaml.bak || true
+          # Restore our files after create
+          git checkout -- pubspec.yaml lib/ README.md assets/ logo.png .github/ 2>/dev/null || true
 
       - name: Install dependencies
         run: flutter pub get
 
       - name: Build APK (debug)
-        run: flutter build apk --debug --dart-define=GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }} 2>&1 | tail -80
+        run: flutter build apk --debug --dart-define=GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

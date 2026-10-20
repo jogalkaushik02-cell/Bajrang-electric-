@@ -21,6 +21,11 @@ jobs:
           flutter-version: '3.27.4'
           channel: 'stable'
 
+      - name: Create Flutter project structure
+        run: |
+          rm -rf android ios web linux macos windows test
+          flutter create . --org com.bajrangelectric --project-name nutrition_tracker --platforms android
+
       - name: Install dependencies
         run: flutter pub get
 
@@ -28,7 +33,7 @@ jobs:
         run: flutter analyze || true
 
       - name: Build APK (debug)
-        run: flutter build apk --debug
+        run: flutter build apk --debug --dart-define=GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

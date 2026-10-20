@@ -21,19 +21,10 @@ jobs:
           flutter-version: '3.24.5'
           channel: 'stable'
 
-      - name: Clean and recreate Android
+      - name: Recreate Android platform
         run: |
-          rm -rf android ios web linux macos windows test build .dart_tool .packages .metadata
+          rm -rf android
           flutter create . --org com.bajrangelectric --project-name nutrition_tracker --platforms android
-
-      - name: Restore source files
-        run: |
-          cp -r lib/ lib_backup/ 2>/dev/null || true
-          cp -r assets/ assets_backup/ 2>/dev/null || true
-          cp README.md README.md.bak 2>/dev/null || true
-          cp pubspec.yaml pubspec.yaml.bak 2>/dev/null || true
-          cp logo.png logo.png.bak 2>/dev/null || true
-          git checkout -- lib/ assets/ pubspec.yaml README.md logo.png 2>/dev/null || true
 
       - name: Install dependencies
         run: flutter pub get

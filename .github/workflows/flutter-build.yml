@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -30,12 +28,12 @@ jobs:
 
       - name: Restore app files
         run: |
-          git checkout HEAD -- pubspec.yaml lib/ README.md assets/ logo.png 2>/dev/null || cp -r $(git rev-parse --show-toplevel)/../Bajrang-electric-/lib . 2>/dev/null || true
-          git show HEAD:pubspec.yaml > pubspec.yaml || true
-          git show HEAD:lib/main.dart > lib/main.dart || true
-          git show HEAD:assets/logo.png > assets/logo.png 2>/dev/null || true
-          git show HEAD:logo.png > logo.png 2>/dev/null || true
-          git show HEAD:README.md > README.md || true
+          cp ../Bajrang-electric-/pubspec.yaml ./pubspec.yaml 2>/dev/null || true
+          mkdir -p lib assets
+          cp ../Bajrang-electric-/lib/main.dart ./lib/main.dart 2>/dev/null || true
+          cp ../Bajrang-electric-/assets/logo.png ./assets/logo.png 2>/dev/null || true
+          cp ../Bajrang-electric-/logo.png ./logo.png 2>/dev/null || true
+          cp ../Bajrang-electric-/README.md ./README.md 2>/dev/null || true
 
       - name: Install dependencies
         run: flutter pub get

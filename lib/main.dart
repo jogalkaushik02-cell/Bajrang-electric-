@@ -1282,14 +1282,15 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                             spacing: 8,
                             runSpacing: 8,
                             children: [
-                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity( .05), borderRadius: BorderRadius.circular(8)), child: Text('P ${food.protein.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
-                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity( .05), borderRadius: BorderRadius.circular(8)), child: Text('C ${food.carbs.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
-                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity( .05), borderRadius: BorderRadius.circular(8)), child: Text('F ${food.fat.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
+                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(8)), child: Text('P ${food.protein.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
+                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(8)), child: Text('C ${food.carbs.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
+                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), borderRadius: BorderRadius.circular(8)), child: Text('F ${food.fat.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
                             ],
                           ),
                         ],
                       ),
                     ),
+                ),
               ],
             ),
     );

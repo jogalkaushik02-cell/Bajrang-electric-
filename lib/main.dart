@@ -8,7 +8,7 @@ import 'package:path/path.dart' as p;
 import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _apiKey = String.fromEnvironment('GEMINI_API_KEY');
+const _apiKey = String.fromEnvironment('GEMINI_API_KEY', defaultValue: 'AQAb8RN6IlUWVIyHAo2Ii3LviKS01LaM_4wajlL8y4CHZlbbM66Q');
 const _model = String.fromEnvironment(
   'GEMINI_MODEL',
   defaultValue: 'gemini-2.5-flash',
@@ -244,7 +244,7 @@ class AiFoodResult {
 class GeminiNutritionService {
   Future<AiFoodResult> lookup({
     required String query,
-    required double grams,
+    required double? grams,
     Uint8List? imageBytes,
     String mimeType = 'image/jpeg',
   }) async {
@@ -254,11 +254,16 @@ class GeminiNutritionService {
       );
     }
 
+    final portionText = grams != null && grams > 0
+        ? 'Requested portion: ${grams.toStringAsFixed(1)} grams.'
+        : 'User did not specify grams. You MUST estimate a realistic portion size for each food based on common servings (e.g. 1 banana = ~100g, 1 plate of rice = ~200-250g, 1 egg = ~50g).';
+
     final prompt = '''
 You are a careful nutrition research assistant. Research the food: "$query".
-Requested portion: ${grams.toStringAsFixed(1)} grams.
+$portionText
 If an image is attached, identify visible foods separately and estimate grams for each,
 but explicitly mark weights as estimates. Search for nutrition evidence when useful.
+If the user says "2 bananas", "one plate", "a bowl", etc., infer reasonable typical weights automatically.
 Source priority:
 1. Official manufacturer nutrition label for the exact branded product/variant.
 2. Official government or recognized food composition database (e.g. USDA FoodData Central,
@@ -273,7 +278,7 @@ Return one JSON object only, with this schema:
  "items":[{
   "item_name":"food name",
   "category":"category",
-  "estimated_grams":${grams.toStringAsFixed(1)},
+  "estimated_grams":${grams != null && grams > 0 ? grams.toStringAsFixed(1) : 'null'},
   "kcal_per_100g":null,
   "protein_per_100g":null,
   "carbs_per_100g":null,
@@ -289,6 +294,7 @@ Return one JSON object only, with this schema:
 Use null for any nutrient that cannot be responsibly estimated. Values must be numeric or null.
 Do not return fabricated source URLs; the app will use grounding metadata for sources.
 For a text query, return one item. For a plate image, return one item per distinct food.
+If estimated_grams is null in schema context but user wants inference, provide a sensible numeric estimated_grams for each item.
 ''';
 
     final parts = <Map<String, dynamic>>[];
@@ -364,7 +370,7 @@ For a text query, return one item. For a plate image, return one item per distin
     final foods = <FoodLog>[];
     for (final raw in rawItems) {
       if (raw is! Map<String, dynamic>) continue;
-      final itemGrams = _number(raw['estimated_grams']) ?? grams;
+      final itemGrams = _number(raw['estimated_grams']) ?? grams ?? 100;
       foods.add(FoodLog(
         name: (raw['item_name'] as String?)?.trim().isNotEmpty == true
             ? (raw['item_name'] as String).trim()
@@ -381,6 +387,7 @@ For a text query, return one item. For a plate image, return one item per distin
         confidence: _confidence(raw['confidence']),
         note: [
           raw['nutrition_note'] as String? ?? '',
+          if (grams == null || grams <= 0) 'Portion estimated automatically from description.',
           if (_hasMissingNutrients(raw)) 'One or more nutrient values were missing; shown as 0 for calculation. Treat totals as incomplete.',
         ].where((s) => s.isNotEmpty).join(' '),
         createdAt: now,
@@ -500,10 +507,14 @@ class _TrackerHomeState extends State<TrackerHome> {
       setState(() => _error = 'Enter a food name first.');
       return;
     }
-    final grams = double.tryParse(_gramsController.text.trim());
-    if (grams == null || grams <= 0 || grams > 3000) {
-      setState(() => _error = 'Enter a weight between 1 and 3000 grams.');
-      return;
+    final gramsText = _gramsController.text.trim();
+    double? grams;
+    if (gramsText.isNotEmpty) {
+      grams = double.tryParse(gramsText);
+      if (grams == null || grams <= 0 || grams > 3000) {
+        setState(() => _error = 'Enter a weight between 1 and 3000 grams or leave empty to auto-estimate.');
+        return;
+      }
     }
     setState(() {
       _loading = true;
@@ -765,7 +776,8 @@ class _TrackerHomeState extends State<TrackerHome> {
                     controller: _gramsController,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: const InputDecoration(
-                      labelText: 'Portion weight (grams)',
+                      labelText: 'Portion weight (grams) - leave empty to auto-estimate',
+                      hintText: 'e.g. 150 or leave empty for "2 bananas"',
                       prefixIcon: Icon(Icons.scale_outlined),
                       border: OutlineInputBorder(),
                     ),

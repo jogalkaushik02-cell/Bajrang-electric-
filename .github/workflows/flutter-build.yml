@@ -18,7 +18,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.4'
+          flutter-version: '3.24.5'
           channel: 'stable'
 
       - name: Create Flutter project structure
@@ -26,11 +26,9 @@ jobs:
           rm -rf android ios web linux macos windows test
           flutter create . --org com.bajrangelectric --project-name nutrition_tracker --platforms android
 
-      - name: Copy app files
+      - name: Restore app files
         run: |
-          cp -f pubspec.yaml /tmp/pubspec.yaml.bak || true
-          # Restore our files after create
-          git checkout -- pubspec.yaml lib/ README.md assets/ logo.png .github/ 2>/dev/null || true
+          git checkout -- pubspec.yaml lib/ README.md assets/ logo.png 2>/dev/null || true
 
       - name: Install dependencies
         run: flutter pub get

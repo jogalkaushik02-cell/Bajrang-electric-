@@ -859,9 +859,9 @@ class _TrackerHomeState extends State<TrackerHome> {
   Widget _message(String message, {bool isError = false}) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isError ? Colors.red.withValues(alpha: .12) : const Color(0xFF1A2220),
+          color: isError ? Colors.red.withOpacity( .12) : const Color(0xFF1A2220),
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isError ? Colors.redAccent.withValues(alpha: .5) : Colors.white10),
+          border: Border.all(color: isError ? Colors.redAccent.withOpacity( .5) : Colors.white10),
         ),
         child: Text(message),
       );
@@ -987,7 +987,7 @@ class _TrackerHomeState extends State<TrackerHome> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: .7)),
+        border: Border.all(color: color.withOpacity( .7)),
       ),
       child: Text(value.toUpperCase(), style: TextStyle(fontSize: 9, color: color, fontWeight: FontWeight.bold)),
     );
@@ -996,7 +996,7 @@ class _TrackerHomeState extends State<TrackerHome> {
   Widget _pill(String text) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: .05),
+          color: Colors.white.withOpacity( .05),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(text, style: const TextStyle(fontSize: 11)),
@@ -1282,9 +1282,9 @@ class _HistoryDetailScreenState extends State<HistoryDetailScreen> {
                             spacing: 8,
                             runSpacing: 8,
                             children: [
-                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withValues(alpha: .05), borderRadius: BorderRadius.circular(8)), child: Text('P ${food.protein.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
-                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withValues(alpha: .05), borderRadius: BorderRadius.circular(8)), child: Text('C ${food.carbs.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
-                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withValues(alpha: .05), borderRadius: BorderRadius.circular(8)), child: Text('F ${food.fat.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
+                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity( .05), borderRadius: BorderRadius.circular(8)), child: Text('P ${food.protein.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
+                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity( .05), borderRadius: BorderRadius.circular(8)), child: Text('C ${food.carbs.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
+                              Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5), decoration: BoxDecoration(color: Colors.white.withOpacity( .05), borderRadius: BorderRadius.circular(8)), child: Text('F ${food.fat.toStringAsFixed(1)}g', style: const TextStyle(fontSize: 11))),
                             ],
                           ),
                         ],

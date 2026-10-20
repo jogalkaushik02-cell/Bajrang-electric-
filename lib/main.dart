@@ -36,7 +36,7 @@ class NutritionApp extends StatelessWidget {
         colorScheme: scheme,
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFF101514),
-        cardTheme: const CardThemeData(
+        cardTheme: const CardTheme(
           color: Color(0xFF1A2220),
           elevation: 0,
           margin: EdgeInsets.zero,
